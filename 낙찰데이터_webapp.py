@@ -25,21 +25,21 @@ if __name__ == "__main__":
         unsafe_allow_html=True)
 
     # 사용자 입력
-    공고종목 = st.radio("공고종목", ['석면해체', '석면해체, 비계구조[대]', '석면해체,비계구조[대]'], index=2)
-    지역 = st.radio("지역", ['충남'], index=0)
-    발주기관 = st.selectbox("발주기관", ['국방출판지원단', '충청남도천안교육지원청', '충청남도서산교육지원청', '충청남도논산계룡교육지원청', '충청남도 서산시', '국방부계룡대근무지원단', '공주대학교', '국군재정관리단', '충청남도교육청 태안여자고등 \n학교', '충청남도예산교육지원청', '육군훈련소', '충청남도교육청 보령정심학교'], index=6)
-    추정가격원 = st.selectbox("추정가격(원)", ['102503636', '223712728', '52552727', '249012728', '86870000', '293240000', '2429090', '142560000', '45869885', '118889092', '34609091', '175432728', '25423283', '395801245', '191323636', '180760000', '339635455', '337727272', '182430000'], index=2)
-    기초금액원 = st.number_input("기초금액(원)", value=192976000)
+    공고종목 = st.radio("공고종목", ['석면해체', '석면해체,비계구조[대]'], index=1)
+    지역 = st.radio("지역", ['충남', '전국'], index=0)
+    발주기관 = st.selectbox("발주기관", ['국방출판지원단', '충청남도천안교육지원청', '충청남도서산교육지원청', '충청남도논산계룡교육지원청', '충청남도 서산시', '국방부계룡대근무지원단', '공주대학교', '국군재정관리단', '충청남도교육청 태안여자고등 \n학교', '충청남도예산교육지원청', '육군훈련소', '충청남도교육청 보령정심학교'], index=2)
+    추정가격원 = st.number_input("추정가격(원)", value=346630000)
+    기초금액원 = st.number_input("기초금액(원)", value=57808000)
     낙찰하한율 = st.number_input("낙찰하한율(%)", value=87.745)
-    예정가격원 = st.number_input("예정가격(원)", value=194575825)
-    예가기초 = st.number_input("예가_기초(%)", value=100.829)
-    낙찰하한가원 = st.number_input("낙찰하한가(원)", value=172114418)
-    투찰기초 = st.number_input("투찰_기초(%)", value=89.189)
-    A값원 = st.number_input("A값(원)", value=11292208.0)
+    예정가격원 = st.number_input("예정가격(원)", value=57643300)
+    예가기초 = st.number_input("예가_기초(%)", value=99.715)
+    낙찰하한가원 = st.number_input("낙찰하한가(원)", value=50579114)
+    투찰기초 = st.number_input("투찰_기초(%)", value=87.495)
+    A값원 = st.number_input("A값(원)", value=17529985.0)
     순공사원가원 = st.number_input("순공사원가(원)", value=0.0)
-    투찰율 = st.number_input("투찰율(%)", value=87.785)
-    기초대비 = st.number_input("기초대비(%)", value=89.228)
-    업체사정율 = st.number_input("업체사정율(%)", value=100.872)
+    투찰율 = st.number_input("투찰율(%)", value=87.964)
+    기초대비 = st.number_input("기초대비(%)", value=87.714)
+    업체사정율 = st.number_input("업체사정율(%)", value=99.964)
 
     st.markdown("")
 
@@ -71,7 +71,7 @@ if __name__ == "__main__":
 
         with st.spinner("추론 중..."):
             prediction = str(model.predict(point)[0])
-            st.success(f"**{state.target}**의 예측값은 **{int(float(prediction))}** 입니다.")
+            st.success(f"{state.target}의 예측값은 **{int(float(prediction))}** 입니다.")
             st.markdown("")
 
         with st.spinner("설명 생성 중..."):
