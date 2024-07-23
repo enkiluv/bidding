@@ -121,7 +121,7 @@ def rational_imputer(data):
     data[num_cols] = data[num_cols].fillna(medians)
     # categorical columns
     cat_cols = data.select_dtypes(exclude=np.number).columns
-    data[cat_cols] = data[cat_cols].fillna("<NA>")
+    data[cat_cols] = data[cat_cols].fillna(_NA)
     # All set
     return data
 
