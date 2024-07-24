@@ -17,7 +17,7 @@ def load_context(dataname):
 # 드라이버 함수
 if __name__ == "__main__":
     # 스트림릿 인터페이스
-    st.subheader(f"투찰금액(원) 예측기 v2")
+    st.subheader(f"투찰금액 예측 v2")
     st.markdown(":blue[**AI Wonder**] 제공")
 
     # 라디오버튼들을 가로로 배치하도록 설정
@@ -25,25 +25,25 @@ if __name__ == "__main__":
         unsafe_allow_html=True)
 
     # 사용자 입력
-    공고종목 = st.radio("공고종목", ['석면해체', '비계구조[대]'], index=0)
-    지역 = st.radio("지역", ['충남', '대전,충남', '전국'], index=1)
-    발주기관 = st.selectbox("발주기관", ['충청남도논산계룡교육지원청', '환경보전협회', '충청남도교육청 아산고등학교', '충청남도천안교육지원청', '충청남도서산교육지원청', '육군훈련소', '충청남도교육청 호서고등학교', '충청남도보령교육지원청', '충청남도', '국방출판지원단', '충청남도예산교육지원청', '충청남도교육청 보령정심학교', '국군재정관리단', '충청남도태안교육지원청', '충청남도교육청 예산고등학교', '서울특별시교육청 영락고등학교', '충청남도 공주시'], index=13)
-    기초금액원 = st.number_input("기초금액(원)", value=393787117)
-    추정가격원 = st.number_input("추정가격(원)", value=359052000.316)
-    낙찰하한율 = st.number_input("낙찰하한율(%)", value=87.141)
-    예정가격원 = st.number_input("예정가격(원)", value=394275348)
-    예가기초 = st.number_input("예가_기초(%)", value=100.103)
-    낙찰하한가원 = st.number_input("낙찰하한가(원)", value=346064922)
-    투찰기초 = st.number_input("투찰_기초(%)", value=88.056)
-    A값원 = st.number_input("A값(원)", value=26799063.241)
-    순공사원가원 = st.number_input("순공사원가(원)", value=319086294.332)
-    복수예비가1 = st.number_input("복수예비가1", value=395354661)
-    복수예비가2 = st.number_input("복수예비가2", value=392033214)
-    복수예비가3 = st.number_input("복수예비가3", value=392687670)
-    복수예비가4 = st.number_input("복수예비가4", value=397017960)
-    투찰율 = st.number_input("투찰율(%)", value=87.179)
-    기초대비 = st.number_input("기초대비(%)", value=88.093)
-    업체사정율 = st.number_input("업체사정율(%)", value=100.143)
+    공고종목 = st.radio("공고종목", ['석면해체', '석면해체,비계구조[대]'], index=0)
+    지역 = st.radio("지역", ['충남'], index=0)
+    발주기관 = st.selectbox("발주기관", ['국방출판지원단', '충청남도천안교육지원청', '충청남도서산교육지원청', '충청남도논산계룡교육지원청', '충청남도 서산시', '국방부계룡대근무지원단', '공주대학교', '국군재정관리단', '충청남도교육청 태안여자고등학교', '충청남도예산교육지원청', '육군훈련소', '충청남도교육청 보령정심학교'], index=3)
+    기초금액원 = st.number_input("기초금액(원)", value=57808000)
+    추정가격원 = st.number_input("추정가격(원)", value=52552727.0)
+    낙찰하한율 = st.number_input("낙찰하한율(%)", value=87.745)
+    예정가격원 = st.number_input("예정가격(원)", value=57643300)
+    예가기초 = st.number_input("예가_기초(%)", value=99.715)
+    낙찰하한가원 = st.number_input("낙찰하한가(원)", value=50579114)
+    투찰기초 = st.number_input("투찰_기초(%)", value=87.495)
+    A값원 = st.number_input("A값(원)", value=17529985.0)
+    순공사원가원 = st.number_input("순공사원가(원)", value=0.0)
+    복수예비가1 = st.number_input("복수예비가1", value=57974000)
+    복수예비가2 = st.number_input("복수예비가2", value=58718500)
+    복수예비가3 = st.number_input("복수예비가3", value=56089400)
+    복수예비가4 = st.number_input("복수예비가4", value=57791300)
+    투찰율 = st.number_input("투찰율(%)", value=87.964)
+    기초대비 = st.number_input("기초대비(%)", value=87.714)
+    업체사정율 = st.number_input("업체사정율(%)", value=99.964)
 
     st.markdown("")
 
