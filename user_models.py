@@ -12,7 +12,6 @@ from sklearn.neural_network import MLPClassifier, MLPRegressor
 from sklearn.linear_model import Lasso as LassoRegression, Ridge as RidgeRegression
 from sklearn.naive_bayes import MultinomialNB, GaussianNB
 from catboost import CatBoostClassifier, CatBoostRegressor
-from sklearn.model_selection import train_test_split
 from flaml import tune
 
 
@@ -361,75 +360,4 @@ class GaussianNBEstimator(SKLearnEstimator):
     @classmethod
     def search_space(cls, data_size, task):
         return gaussian_nb_space
-
-# Holt_Winters (Patch FLAML 2.x bugs)
-from flaml.automl.time_series.ts_model import StatsModelsEstimator
-class HoltWintersEstimator(StatsModelsEstimator):
-    @classmethod
-    def _search_space(cls, data, task, pred_horizon, **params):
-        space = {
-            "damped_trend": {"domain": tune.choice([True, False]), "init_value": False},
-            "trend": {"domain": tune.choice(["add", "mul", None]), "init_value": "add"},
-            "seasonal": {
-                "domain": tune.choice(["add", "mul", None]),
-                "init_value": "add",
-            },
-            "use_boxcox": {"domain": tune.choice([False, True]), "init_value": False},
-            "seasonal_periods": {  # statsmodels casts this to None if "seasonal" is None
-                "domain": tune.choice([7, 12, 4, 52, 6]),  # weekly, yearly, quarterly, weekly w yearly data
-                "init_value": 7,
-            },
-        }
-        return space
-
-    def fit(self, X_train, y_train, budget=None, free_mem_ratio=0, **kwargs):
-        from flaml.automl.model import logger, suppress_stdout_stderr
-
-        import warnings
-        warnings.filterwarnings("ignore")
-        from statsmodels.tsa.holtwinters import (
-            ExponentialSmoothing as HWExponentialSmoothing,
-        )
-
-        import time
-        current_time = time.time()
-        super().fit(X_train, y_train, budget=budget, **kwargs)
-        X_train = self.enrich(X_train)
-
-        from pandas import to_datetime
-        self.regressors = []
-        data = X_train
-        target_col = data.target_names[0]
-        regressors = data.regressors
-        # This class only support univariate regression
-        train_df = data.train_data[self.regressors + [target_col]]
-        train_df.index = to_datetime(data.train_data[data.time_col])
-
-        if regressors:
-            logger.warning("Regressors are ignored for Holt-Winters ETS models.")
-
-        train_df = self._preprocess(train_df)
-
-        # Override incompatible parameters
-        if train_df.shape[0] < 2 * self.params["seasonal_periods"]:
-            self.params["seasonal"] = None
-        if self.params["seasonal"] == "mul" and (train_df[target_col] == 0).sum() > 0:
-            self.params["seasonal"] = "add"
-        if self.params["trend"] == "mul" and (train_df[target_col] == 0).sum() > 0:
-            self.params["trend"] = "add"
-
-        if not self.params["seasonal"] or self.params["trend"] not in ["mul", "add"]:
-            self.params["damped_trend"] = False
-
-        model = HWExponentialSmoothing(
-            train_df[[target_col]],
-            damped_trend=self.params["damped_trend"],
-            seasonal=self.params["seasonal"],
-            trend=self.params["trend"],
-        )
-        with suppress_stdout_stderr():
-            model = model.fit()
-        train_time = time.time() - current_time
-        self._model = model
-        return train_time
 

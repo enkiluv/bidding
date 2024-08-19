@@ -41,7 +41,7 @@ def read_dataset(source, drop_unnamed_cols=True):
         return pd.read_csv(file, **read_args)
 
     def rename_columns(data,
-            allowed_characters=r"A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ0-9_%#\(\)\+\-\.\?\!\<\>\="):
+            allowed_characters=r"A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ0-9_%#\(\)\+\-\.\?\!\<\>\=/"):
         old_cols = data.columns.tolist()
         new_cols = [re.sub(f'[^{allowed_characters}]', '_', col.strip()) for col in data.columns]
         renamed_ = False
@@ -121,7 +121,7 @@ def inverse_transform(state, dataset, nums_only=False):
             np.round(state.num_scaler.inverse_transform(dataset[state.num_cols]), 3),
             columns=state.num_cols
         )
-        int_cols = dict(zip(state.num_cols, [num_type=='int64' for num_type in state.num_type]))
+        int_cols = dict(zip(state.num_cols, [str(num_type).startswith('int') for num_type in state.num_type]))
         for col in int_cols:
             if int_cols[col]:
                 num_cols[col] = num_cols[col].astype(int)
@@ -151,6 +151,8 @@ def local_explanations(state, orig, form="as_list"):
 
         importances = []
         feature_names = state.X_train.columns.tolist()
+        if state.task_type == "회귀":
+            importances.append(("intercept", "_", round(exp.intercept[1], 3)))
         for feature_id, importance in explanation:
             feature = feature_names[feature_id]
             importances.append((feature, point_dict[0][feature], round(importance, 3)))
@@ -195,10 +197,11 @@ def local_explanations(state, orig, form="as_list"):
 def whatif_instances(state, point):
     def fix_target_type(data, target_type):
         # data = data.flatten()
-        if target_type == 'float64':
-            return data.astype(target_type)
-        if target_type == 'int64':
-            return np.round(data).astype(target_type)
+        target_type = str(target_type)
+        if target_type.startswith('float'):
+            return data.astype(float)
+        if target_type.startswith('int'):
+            return np.round(data).astype(int)
         return data
 
     # Prep data
